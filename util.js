@@ -1,40 +1,36 @@
 
 
-  const validatePhone = (rule, value, callback) => {
+  const validatePhone = (value, callback) => {
     let regPhone = /^1[3|4|5|7|8][0-9]\d{8}$/;
-    console.log(value)
     if (!regPhone.test(value)) {
       callback(new Error("请输入正确的手机号码格式"));
     } else {
       callback();
     }
   };
-  const newInputs = (rule, value, callback) => {
-    console.log(value)
-  };
 
 //节流
-  const fnThrottle = (method, delay, duration)=>{
-    var that = this;
-    var timer = this.timer;
-    var begin = new Date().getTime();
-    return function(){
-      var context = that;
-      var args = arguments;
-      var current = new Date().getTime();
-      clearTimeout(timer);
-      if(current-begin>=duration){
-        method.apply(context,args);
-        begin=current;
-      }else{
-        console.log(delay)
-        that.timer=setTimeout(function(){
-          method.apply(context,args);
-        },delay);
-      }
-    }
+  const Throttle = (method, delay)=>{
+   var flag = true;    
+        return () => {
+          if (!flag) return false;
+          flag = false;
+          setTimeout(function () {
+            fn();
+            flag = true;
+          }, time);
+        };
   };
 
+//防抖
+const debounce = (fn, wait)=>{    
+    var timeout = null;    
+    return function() {        
+        if(timeout !== null)   clearTimeout(timeout);        
+        timeout = setTimeout(fn, wait);    
+    }
+}
+//日期格式化 fmt = "YYYY-MM-dd HH:mm:SS"
   const dateFormat = (fmt)=> {
     var date = new Date()
     let ret;
@@ -59,7 +55,7 @@
 
   module.exports={
     validatePhone,
-    newInputs,
-    fnThrottle,
-    dateFormat
+    Throttle,
+    dateFormat,
+    debounce
   }
